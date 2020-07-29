@@ -87,3 +87,56 @@ class Preprocessing():
             s.append(aux)
         return ' '.join(s)
 ```
+
+## app.py
+
+Se trata de una aplicación de [Flask](https://flask.palletsprojects.com/en/1.1.x/) con dos vistas:
+
+- index
+```python
+@app.route('/')
+def index():
+    session = init_db()
+    tripletes = session.query(Triplete).filter(Triplete.predicate == 'title')
+    return render_template('index.html', tripletes=tripletes)
+```
+Esta vista lo que haces es abrir una conección con la base de datos, traer los 
+registros de las tripletas dond el predicado sea el título. (Se puede mejorar, depende 
+de lo que se quiera mostrar). En el index, con un __for__ se muestra las tripletas.
+
+- prediction
+```python
+@app.route('/prediction', methods=['GET', 'POST'])
+def prediction():
+    if request.method == 'POST':
+        search = request.form['search']
+        # Preprocesar entrada de texto
+        result = Prediction
+        search = Preprocessing.pre_process(search)
+        p = result.predicty(search)
+        print(p)
+        tripletes = []
+        session = init_db()
+        for i in p[0] :
+            i = i.replace('__label__', '')
+            i = i.replace('-', ' ')
+            i += '?show=full'
+            aux = session.query(Triplete).filter(Triplete.predicate == 'title')
+            print(aux)
+            for a in aux :
+                if a.subject == i :
+                    tripletes.append(a)
+            print(i)
+    return render_template('index.html', tripletes=tripletes)
+```
+
+Esta vista se activa cuando el usuario realiza una búsqueda 
+mediante un formulario. Se preprocesa la entrada de texto 
+para que la predicción sea lo más acertada posible. (Esto debido a 
+que el resultado de la predicción varía si se usa palabras en 
+mayúsculas o minúsculas o con números, por ejemplo).
+
+Después se abre una conexión con la base de datos y se trae de 
+nuevo todas las tripletas que tengan como predicado el título del 
+recurso, que es lo que se desea mostrar. Pero solo se envía al template 
+aquellas que coinciden con el resultado de la predicción _p = result.predicty(search)_
