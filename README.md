@@ -18,9 +18,11 @@ clasificador de texto con [FastText](https://fasttext.cc/) y Python.
 
 Los datos de la Base de conocimiento deben encontarse en formato [etiqueta] [valor] [Más información](https://fasttext.cc/docs/en/supervised-tutorial.html). Por ejemplo:
 
-__label__http://oasis.col.org/handle/11599/2562 entrepreneurship 
-__label__http://oasis.col.org/handle/11599/2562 flexible learning 
-__label__http://oasis.col.org/handle/11599/2562 inclusive education
+```
+__label__ http://oasis.col.org/handle/11599/2562 entrepreneurship 
+__label__ http://oasis.col.org/handle/11599/2562 flexible learning 
+__label__ http://oasis.col.org/handle/11599/2562 inclusive education
+```
 
 La etiqueta debe siempre empezar con '_ _ _label_ _ _', y seguido de un espacio, el valor.
 
